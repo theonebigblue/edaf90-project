@@ -7,6 +7,7 @@ import { IndexComponent } from './index/index.component';
 import { ViewComponent } from './view/view.component';
 import { TimelineComponent } from './timeline/timeline.component';
 import { MapComponent } from './map/map.component';
+import {RouterModule} from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -18,7 +19,21 @@ import { MapComponent } from './map/map.component';
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    RouterModule.forRoot([
+          {
+            path: 'index',
+            component: IndexComponent
+          },
+          {
+            path: 'view',
+            component: ViewComponent
+          },
+          {
+            path: '',
+            component: AppComponent
+          },
+    ])
   ],
   providers: [],
   bootstrap: [AppComponent]
