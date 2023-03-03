@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { GpxGetterService } from './gpx-getter.service';
+import { GpxService } from './gpx.service';
 
-describe('GpxGetterService', () => {
-  let service: GpxGetterService;
+describe('GpxService', () => {
+  let service: GpxService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(GpxGetterService);
+    service = TestBed.inject(GpxService);
   });
 
   it('should be created', () => {

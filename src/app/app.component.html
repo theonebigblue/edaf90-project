@@ -1,2 +1,14 @@
+<mat-toolbar color="primary">
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with menu icon">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span>GPX file viewer</span>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item [routerLink]="['index']">
+            <mat-icon>list</mat-icon>
+            <span>Index</span>
+        </button>
+    </mat-menu>
+</mat-toolbar>
 <router-outlet></router-outlet>
 
