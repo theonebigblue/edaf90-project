@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import * as L from 'leaflet'
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import * as L from 'leaflet';
+import GpxParser, { Point } from 'gpxparser';
 
 @Component({
   selector: 'app-map',
@@ -7,20 +8,24 @@ import * as L from 'leaflet'
   styleUrls: ['./map.component.css']
 })
 
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, OnChanges {
+  @Input() gpxData: GpxParser | undefined;
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    if(this.gpxData!==undefined){
+      this.addGpxPath(this.gpxData);
+    } 
+    console.log(this.tracks)
+    
+  }
+
   ngOnInit(): void {
-    this.initMap();
-    var latlngs: [number, number][] = [
-      [55.722727014745416, 13.21390131868679],
-      [55.722719016402856, 13.213821399388207],
-      [55.72302346850292,13.213701373737045]
-    ];
-    this.addPathFromPoints(latlngs);
+    this.initMap(); 
   }
 
   private map: L.Map;
   private center: L.LatLngExpression = [55.722727014745416, 13.21390131868679]; // Kämnärsrätten
-  private paths: L.Polyline[] = [];
+  public tracks: L.Polyline[] = [];
 
   private initMap(): void {
     this.map = L.map('map', {
@@ -37,16 +42,46 @@ export class MapComponent implements OnInit {
     tiles.addTo(this.map);
   }
 
+public addGpxPath(gpxData: GpxParser){
+  // go through metadata, track name, time etc and put in popup. then add every point to the track
+  
+  let polylines:L.Polyline[] = [];
+
+  for (let index = 0; index < gpxData.tracks.length; index++) {
+    const track = gpxData.tracks[index];
+    const polyline = this.addPathFromPoints(track.points);
+
+    polyline.bindPopup(`<p><b>Distance: </b>${Math.round(track.distance.total * 100)/100000} <b>Comment: </b>${track.cmt}</p>`).openPopup();
+    
+
+    polylines[index] = polyline;
+    let numPaths = this.tracks.length;
+    this.tracks[numPaths] = polyline;
+    
+    console.log('stamped ' + L.stamp(polyline))
+
+
+    polyline.addTo(this.map);
+  }
+}
+
   /**
    * Adds a new paths from an array of points.
    * @param points Array of points.
    * @returns The ID of the added path.
    */
-  public addPathFromPoints(points: [number, number][]): number {
-    let polyline :L.Polyline = L.polyline(points, {color: 'red'}).addTo(this.map);
-    let numPaths = this.paths.length;
-    this.paths[numPaths] = polyline;
-    return numPaths;
+  private addPathFromPoints(points: Point[]): L.Polyline {
+    var color;
+    var r = Math.floor(Math.random() * 255);
+    var g = Math.floor(Math.random() * 255);
+    var b = Math.floor(Math.random() * 255);
+    color = "rgb("+r+" ,"+g+","+ b+")"; 
+
+    let polyline :L.Polyline = L.polyline(points.map(point => [point.lat, point.lon]), {color: color, weight: 4});
+    let numPaths = this.tracks.length;
+    this.tracks[numPaths] = polyline;
+    
+    return polyline;
   }
 
   /**
@@ -54,7 +89,7 @@ export class MapComponent implements OnInit {
    * @param id ID number
    */
   public removePath(id: number): void {
-    delete this.paths[id];
+    delete this.tracks[id];
   }
 
   /**
@@ -63,7 +98,7 @@ export class MapComponent implements OnInit {
    * @returns Corresponding Polyline or undefined if non-existent
    */
   public getPath(id: number): L.Polyline | undefined {
-    return this.paths[id];
+    return this.tracks[id];
   }
 
 }
