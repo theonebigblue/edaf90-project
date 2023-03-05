@@ -9,11 +9,13 @@ import {GpxService} from "../gpx.service";
 })
 export class ViewComponent implements OnInit {
   public gpxObject: GpxParser | undefined;
+  
   constructor(
       public gpxService: GpxService
   ) {}
 
   ngOnInit(): void {
+    console.log("I init")
     // TODO: Replace the static id with id from url
     this.gpxService.getDocFromId('workout-2022-06-08_15-11-Bl_').then(
         data => {
