@@ -6,16 +6,26 @@ import {GpxService} from "../gpx.service";
   templateUrl: './index.component.html',
   styleUrls: ['./index.component.css']
 })
+
 export class IndexComponent implements OnInit{
   public ids: string[] | undefined;
   constructor(
       public gpxService: GpxService
     ) {}
 
-  ngOnInit(): void {
-    this.gpxService.getIds().then(
-        data => this.ids = data
-    );
-  }
-
+    encode(s:string) : string
+    {
+        if (s === undefined){
+            return 'klal';
+        }
+        return btoa(s);
+    }
+    
+    ngOnInit(): void {
+        
+        this.gpxService.getIds().then(
+            data => this.ids = data
+        );
+    }
+    
 }
