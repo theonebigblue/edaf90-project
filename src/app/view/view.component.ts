@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import GpxParser from 'gpxparser';
 import {GpxService} from "../gpx.service";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-view',
@@ -10,12 +11,12 @@ import {GpxService} from "../gpx.service";
 export class ViewComponent implements OnInit {
   public gpxObject: GpxParser | undefined;
   constructor(
-      public gpxService: GpxService
+      public gpxService: GpxService,
+      public route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    // TODO: Replace the static id with id from url
-    this.gpxService.getDocFromId('workout-2022-06-08_15-11-Bl_').then(
+    this.gpxService.getDocFromId(this.route.snapshot.url[1].path).then(
         data => {
           this.gpxObject = data
           console.log(this.gpxObject)
