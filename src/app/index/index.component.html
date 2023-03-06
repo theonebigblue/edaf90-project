@@ -6,7 +6,35 @@
         </li>
     </ul>
     
+    <mat-list>
+        <div mat-subheader></div>
+        <mat-list-item *ngFor="let id of ids">
+            <mat-icon matListItemIcon>room</mat-icon>
+            <div matListItemTitle>
+                <a routerLink="/view/{{id}}">{{id}}</a>
+            </div>
             
+        </mat-list-item>
+    </mat-list>
+
+    <table mat-table [dataSource]="ids">
+        <!-- Name Column -->
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let id" >
+                <div>
+                    <mat-icon matListItemIcon>note</mat-icon>
+                    <a routerLink="/view/{{id}}">{{id}}</a>
+                    </div>
+            </td>
+        </ng-container>
+            
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+
+    
 
 </div>
     
