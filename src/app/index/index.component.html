@@ -1,3 +1,22 @@
-<p>index works!</p>
+<div class="container p-5 bg-light border rounded-3">
+       
+    <mat-list>
+        <div mat-subheader>Choose route to view:</div>
+        <mat-list-item *ngFor="let id of ids">
+            <mat-icon matListItemIcon>room</mat-icon>
+            <div matListItemTitle>
+                <a routerLink="/view/{{id}}">{{id}}</a>
+            </div>
+            
+        </mat-list-item>
+    </mat-list>
 
-{{ids}}
+   
+
+    
+
+</div>
+    
+    
+
+    
