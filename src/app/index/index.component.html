@@ -1,10 +1,20 @@
 <div class="container p-5 bg-light border rounded-3">
-    <h1>Choose tracked route:</h1>
-    <ul >
-        <li *ngFor="let id of ids;">
-            <a routerLink="view/{{id}}">{{id}}</a>
-        </li>
-    </ul>
+       
+    <mat-list>
+        <div mat-subheader>Choose route to view:</div>
+        <mat-list-item *ngFor="let id of ids">
+            <mat-icon matListItemIcon>room</mat-icon>
+            <div matListItemTitle>
+                <a routerLink="/view/{{id}}">{{id}}</a>
+            </div>
+            
+        </mat-list-item>
+    </mat-list>
+
+   
+
+    
+
 </div>
     
     

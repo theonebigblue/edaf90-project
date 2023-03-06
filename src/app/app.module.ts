@@ -11,16 +11,17 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatIconModule} from "@angular/material/icon";
 import {MatMenuModule} from "@angular/material/menu";
-
+import { MatTableModule } from '@angular/material/table';
+import {MatListModule} from '@angular/material/list';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    IndexComponent,
-    ViewComponent,
-    TimelineComponent,
-    MapComponent,
-  ],
+    declarations: [
+        AppComponent,
+        IndexComponent,
+        ViewComponent,
+        TimelineComponent,
+        MapComponent,
+    ],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
@@ -41,9 +42,11 @@ import {MatMenuModule} from "@angular/material/menu";
         MatButtonModule,
         MatToolbarModule,
         MatIconModule,
-        MatMenuModule
+        MatMenuModule,
+        MatTableModule,
+        MatListModule
     ],
-  providers: [],
-  bootstrap: [AppComponent]
+    providers: [],
+    bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
