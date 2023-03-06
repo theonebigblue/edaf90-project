@@ -5,26 +5,24 @@ import GpxParser, { Point } from 'gpxparser';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css']
+  styleUrls: ['../../../node_modules/leaflet/dist/leaflet.css', './map.component.css']
 })
 
 export class MapComponent implements OnInit, OnChanges {
   @Input() gpxData: GpxParser | undefined;
-  
+
   ngOnChanges(changes: SimpleChanges): void {
     if(this.gpxData!==undefined){
       this.addGpxPath(this.gpxData);
-    } 
-    console.log(this.tracks)
-    
+    }
   }
 
   ngOnInit(): void {
-    this.initMap(); 
+    this.initMap();
   }
 
-  private map: L.Map;
-  private center: L.LatLngExpression = [55.722727014745416, 13.21390131868679]; // Kämnärsrätten
+  public map: L.Map;
+  public center: L.LatLngExpression = [55.722727014745416, 13.21390131868679]; // Kämnärsrätten
   public tracks: L.Polyline[] = [];
 
   private initMap(): void {
@@ -38,13 +36,13 @@ export class MapComponent implements OnInit, OnChanges {
       minZoom: 10,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
-    
+
     tiles.addTo(this.map);
   }
 
 public addGpxPath(gpxData: GpxParser){
   // go through metadata, track name, time etc and put in popup. then add every point to the track
-  
+
   let polylines:L.Polyline[] = [];
 
   for (let index = 0; index < gpxData.tracks.length; index++) {
@@ -52,15 +50,11 @@ public addGpxPath(gpxData: GpxParser){
     const polyline = this.addPathFromPoints(track.points);
 
     polyline.bindPopup(`<p><b>Distance: </b>${Math.round(track.distance.total * 100)/100000} <b>Comment: </b>${track.cmt}</p>`).openPopup();
-    
+
 
     polylines[index] = polyline;
     let numPaths = this.tracks.length;
     this.tracks[numPaths] = polyline;
-    
-    console.log('stamped ' + L.stamp(polyline))
-
-
     polyline.addTo(this.map);
   }
 }
@@ -75,12 +69,12 @@ public addGpxPath(gpxData: GpxParser){
     var r = Math.floor(Math.random() * 255);
     var g = Math.floor(Math.random() * 255);
     var b = Math.floor(Math.random() * 255);
-    color = "rgb("+r+" ,"+g+","+ b+")"; 
+    color = "rgb("+r+" ,"+g+","+ b+")";
 
     let polyline :L.Polyline = L.polyline(points.map(point => [point.lat, point.lon]), {color: color, weight: 4});
     let numPaths = this.tracks.length;
     this.tracks[numPaths] = polyline;
-    
+
     return polyline;
   }
 

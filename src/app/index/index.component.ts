@@ -15,18 +15,11 @@ export class IndexComponent implements OnInit{
         public gpxService: GpxService
     ) {}
 
-    encode(s: string): string {
-        if (s === undefined){
-            return 'klal';
-        }
-        return btoa(s);
-    }
-    
-    ngOnInit(): void {
-        
-        this.gpxService.getIds().then(
-            data => this.ids = data
-        );
-    }
-    
+  ngOnInit(): void {
+    this.gpxService.getIds().then(
+        data => this.ids = data
+    );
+  }
+
 }
+

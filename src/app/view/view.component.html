@@ -1,3 +1,17 @@
-<p>view works!</p>
-<app-map [gpxData]="gpxObject"/>
-<app-timeline/>
+<div class="container">
+<br>
+<div class="row" style="height: 500px">
+    <div class="col">
+        <h3>Map</h3>
+        <hr>
+        <app-map [gpxData]="gpxObject"/>
+    </div>
+    <div class="col">
+        <h3>Timeline</h3>
+        <hr>
+        <app-timeline [gpxData]="gpxObject"/>
+
+    </div>
+</div>
+
+</div>
