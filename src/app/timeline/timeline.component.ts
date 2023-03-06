@@ -44,7 +44,7 @@ export class TimelineComponent implements OnInit, OnChanges {
 
         if (distance > 1) {
           this.wholeKm++;
-          this.data.push(point.time.getMinutes() - prevTime.getMinutes());
+          this.data.push(Math.round((point.time.getTime() - prevTime.getTime())/60000));
           this.nbrOfKilometers.push(this.wholeKm);
           prevTime = point.time;
           distance = 0;
@@ -53,11 +53,14 @@ export class TimelineComponent implements OnInit, OnChanges {
       let lastKmStringFormat = (track.distance.total / 1000).toFixed(2);
       this.nbrOfKilometers.push(parseFloat(lastKmStringFormat));
       this.data.push(
-        points[points.length - 1].time.getMinutes() - prevTime.getMinutes()
+          Math.round((points[points.length - 1].time.getTime() - prevTime.getTime())/60000)
       );
     }
-    this.timeline.data.labels = this.nbrOfKilometers;
-    this.timeline.update();
+    if (this.timeline) {
+      this.timeline.data.labels = this.nbrOfKilometers;
+      this.timeline.update();
+    }
+
   }
 
   private getDistanceFromLatLonInKm(
