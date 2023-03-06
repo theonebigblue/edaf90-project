@@ -6,8 +6,7 @@ import {
   SimpleChanges,
 } from "@angular/core";
 import Chart from "chart.js/auto";
-import GpxParser, { Point } from "gpxparser";
-import * as L from "leaflet";
+import GpxParser from "gpxparser";
 
 @Component({
   selector: "app-timeline",
@@ -31,6 +30,7 @@ export class TimelineComponent implements OnInit, OnChanges {
       let prevPoint = points[0];
       let prevTime = points[0].time;
       points.forEach(point => {
+        //At the moment there is no plotting of the last kilometer
         distance += this.getDistanceFromLatLonInKm(prevPoint.lat, prevPoint.lon, point.lat, point.lon);
         prevPoint = point;
         if (distance > 1) {
@@ -39,10 +39,14 @@ export class TimelineComponent implements OnInit, OnChanges {
           distance = 0;
         }
       })
+
       this.nbrOfKilometers = [...Array(Math.round(track.distance.total / 1000)).keys()]
+      console.log(track.distance.total);
     }
     this.timeline.data.labels = this.nbrOfKilometers;
     this.timeline.update()
+    console.log(this.nbrOfKilometers)
+
   }
 
    private getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
