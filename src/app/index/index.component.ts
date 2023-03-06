@@ -10,7 +10,7 @@ import {GpxService} from "../gpx.service";
 
 export class IndexComponent implements OnInit{
     public ids: string[]
-    public displayedColumns = ["id"];
+    
     constructor(
         public gpxService: GpxService
     ) {}
