@@ -1,3 +1,4 @@
+import { provideCloudinaryLoader } from "@angular/common";
 import {
   Component,
   Input,
@@ -7,6 +8,7 @@ import {
 } from "@angular/core";
 import Chart from "chart.js/auto";
 import GpxParser from "gpxparser";
+import { last } from "rxjs";
 
 @Component({
   selector: "app-timeline",
@@ -16,6 +18,7 @@ import GpxParser from "gpxparser";
 export class TimelineComponent implements OnInit, OnChanges {
   public timeline: Chart;
   nbrOfKilometers: number[] = [];
+  wholeKm: number = 0;
   data: number[] = [];
   @Input() gpxData: GpxParser | undefined;
 
@@ -27,58 +30,70 @@ export class TimelineComponent implements OnInit, OnChanges {
     const points = track?.points;
     let distance = 0;
     if (points) {
+      this.data.push(0); //Add starting velocity = 0.
       let prevPoint = points[0];
       let prevTime = points[0].time;
-      points.forEach(point => {
-        //At the moment there is no plotting of the last kilometer
-        distance += this.getDistanceFromLatLonInKm(prevPoint.lat, prevPoint.lon, point.lat, point.lon);
+      points.forEach((point) => {
+        distance += this.getDistanceFromLatLonInKm(
+          prevPoint.lat,
+          prevPoint.lon,
+          point.lat,
+          point.lon
+        );
         prevPoint = point;
+
         if (distance > 1) {
+          this.wholeKm++;
           this.data.push(point.time.getMinutes() - prevTime.getMinutes());
+          this.nbrOfKilometers.push(this.wholeKm);
           prevTime = point.time;
           distance = 0;
         }
-      })
-
-      this.nbrOfKilometers = [...Array(Math.round(track.distance.total / 1000)).keys()]
-      console.log(track.distance.total);
+      });
+      let lastKmStringFormat = (track.distance.total / 1000).toFixed(2);
+      this.nbrOfKilometers.push(parseFloat(lastKmStringFormat));
+      this.data.push(
+        points[points.length - 1].time.getMinutes() - prevTime.getMinutes()
+      );
     }
     this.timeline.data.labels = this.nbrOfKilometers;
-    this.timeline.update()
-    console.log(this.nbrOfKilometers)
-
+    this.timeline.update();
   }
 
-   private getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+  private getDistanceFromLatLonInKm(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ) {
     var R = 6371; // Radius of the earth in km
-    var dLat = this.deg2rad(lat2-lat1);  // this.deg2rad below
-    var dLon = this.deg2rad(lon2-lon1); 
-    var a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2)
-      ; 
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var dLat = this.deg2rad(lat2 - lat1); // this.deg2rad below
+    var dLon = this.deg2rad(lon2 - lon1);
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(lat1)) *
+        Math.cos(this.deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var d = R * c; // Distance in km
     return d;
   }
-  
+
   private deg2rad(deg: number) {
-    return deg * (Math.PI/180)
+    return deg * (Math.PI / 180);
   }
 
   private createChart(): void {
-
     this.timeline = new Chart("timeline", {
       type: "line", //this denotes tha type of chart
-     
+
       data: {
-  
         labels: this.nbrOfKilometers,
         datasets: [
           {
-            label: "Velocity",
-  
+            label: "Minutes/km",
+
             data: this.data,
             backgroundColor: "turquoise",
           },
