@@ -1,4 +1,3 @@
-import { provideCloudinaryLoader } from "@angular/common";
 import {
   Component,
   Input,
@@ -8,7 +7,6 @@ import {
 } from "@angular/core";
 import Chart from "chart.js/auto";
 import GpxParser from "gpxparser";
-import { last } from "rxjs";
 
 @Component({
   selector: "app-timeline",
@@ -31,6 +29,7 @@ export class TimelineComponent implements OnInit, OnChanges {
     let distance = 0;
     if (points) {
       this.data.push(0); //Add starting velocity = 0.
+      this.nbrOfKilometers.push(0);
       let prevPoint = points[0];
       let prevTime = points[0].time;
       points.forEach((point) => {
